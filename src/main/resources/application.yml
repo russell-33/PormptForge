@@ -1,0 +1,97 @@
+spring:
+  application:
+    name: ai-coder
+  # mysql public config; local password is defined in application-local.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ai_coder
+    username: root
+  profiles:
+    active: local
+  # redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      ttl: 3600 #缓存过期时间
+      password:
+      database: 8
+
+    # session 配置
+  session:
+    store-type: redis
+    # session 30 天过期
+    timeout: 2592000
+server:
+  port: 8234
+  servlet:
+    context-path: /api
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
+# springdoc-openapi
+springdoc:
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.max.aicoder.controller
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# AI
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      model-name: qwen3-max
+      log-requests: true
+      log-responses: true
+      max-tokens: 32768
+      max-retries: 3
+    #      strict-json-schema: true
+#      response-format: json_object
+    streaming-chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      model-name: qwen3-max
+      max-tokens: 32768
+      log-requests: true
+      log-responses: true
+      max-retries: 3
+
+    reasoning-streaming-chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      model-name: qwen3-max
+      max-tokens: 32768
+      temperature: 0.1
+      log-requests: true
+      log-responses: true
+
+    # 智能路由 AI 模型配置（用于简单的分类任务）
+    routing-chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      model-name: qwen-turbo
+      log-requests: true
+      log-responses: true
+
+# 对象存储配置
+cos:
+  client:
+    host: https://ai-code-generator-1400976415.cos.ap-shanghai.myqcloud.com/
+    region: ap-shanghai
+    bucket: ai-code-generator-1400976415
+
+# 阿里云 DashScope 配置
+dashscope:
+  image-model: wan2.2-t2i-flash
+
+# 上下文压缩模型配置
+compress:
+  chat-model:
+    base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    model-name: qwen3.6-flash-2026-04-16
+    max-tokens: 512
+    temperature: 0.3
